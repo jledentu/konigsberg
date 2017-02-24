@@ -5,8 +5,8 @@
   "main": "dist/konigsberg.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "test": "karma start --single-run --browsers PhantomJS && npm run coverage",
-    "coverage": "remap-istanbul -i coverage/coverage.json -t lcov"
+    "test": "karma start --single-run --browsers PhantomJS",
+    "coverage": "remap-istanbul -i coverage/coverage.json -o coverage/lcov.info -t lcovonly"
   },
   "author": "Jérémie Ledentu <jledentu@gmail.com>",
   "license": "MIT",
