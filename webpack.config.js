@@ -40,8 +40,8 @@ module.exports = {
     },
     resolve: {
         modules: [
-        'node_modules',
-        path.resolve(__dirname, 'src')
+            'node_modules',
+            path.resolve(__dirname, 'src')
         ],
         extensions: ['.js', '.json', '.ts']
     }
