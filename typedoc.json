@@ -1,0 +1,16 @@
+{
+    "mode": "file",
+    "out": "docs",
+    "name": "konigsberg",
+    "theme": "default",
+    "ignoreCompilerErrors": "true",
+    "experimentalDecorators": "true",
+    "emitDecoratorMetadata": "true",
+    "moduleResolution": "node",
+    "preserveConstEnums": "true",
+    "stripInternal": "true",
+    "suppressExcessPropertyErrors": "true",
+    "suppressImplicitAnyIndexErrors": "true",
+    "excludePrivate": "true",
+    "module": "umd"
+}

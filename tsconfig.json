@@ -16,7 +16,6 @@
     "preserveConstEnums": true,
     "inlineSourceMap": true,
     "inlineSources": true,
-    "sourceMap": true,
     "skipLibCheck": true
   }
 }

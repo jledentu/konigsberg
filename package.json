@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "test": "karma start --single-run --browsers PhantomJS",
-    "coverage": "remap-istanbul -i coverage/coverage.json -o coverage/lcov.info -t lcovonly"
+    "coverage": "remap-istanbul -i coverage/coverage.json -o coverage/lcov.info -t lcovonly",
+    "doc": "rimraf doc && typedoc --options typedoc.json --out doc src/graph.ts --target ES6"
   },
   "author": "Jérémie Ledentu <jledentu@gmail.com>",
   "license": "MIT",
@@ -31,10 +32,13 @@
     "mocha": "^3.2.0",
     "phantomjs-prebuilt": "^2.1.14",
     "remap-istanbul": "^0.9.1",
+    "rimraf": "^2.6.1",
     "should": "^11.2.0",
     "source-map-loader": "^0.1.6",
     "ts-loader": "^2.0.0",
     "tslint": "^4.4.2",
+    "typedoc": "^0.5.7",
+    "typedoc-plugin-external-module-name": "^1.0.8",
     "typescript": "^2.1.5",
     "webpack": "^2.2.1"
   },

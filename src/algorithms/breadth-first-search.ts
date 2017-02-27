@@ -1,5 +1,8 @@
 import Node from '../node';
 
+/**
+ * Breadth First Search algorithm
+ */
 export default class BreadthFirstSearch<N, E> {
 
     private _root: Node<N, E>;
