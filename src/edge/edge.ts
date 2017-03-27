@@ -1,21 +1,21 @@
 import Node from '../node';
 
-export default class Edge<N, E> {
+export abstract class Edge<N, E> {
 
     /**
      * Source node
      */
-    private _source: Node<N, E>;
+    protected _source: Node<N, E>;
 
     /**
      * Target node
      */
-    private _target: Node<N, E>;
+    protected _target: Node<N, E>;
 
     /**
      * Node data
      */
-    private _data: E;
+    protected _data: E;
 
     /**
      * Constructor
@@ -24,13 +24,31 @@ export default class Edge<N, E> {
         this._source = source;
         this._target = target;
         this._data = data;
+
+        source.attachEdge(this._target, this);
+        target.attachEdge(this._source, this);
     }
 
     /**
      * Destroy this edge.
      */
-    destroy() {
-        this._source.removeEdge(this._target);
-        this._target.removeEdge(this._source);
+    public destroy() {
+        this._source.detachEdge(this._target);
+        this._target.detachEdge(this._source);
     }
+
+    /**
+     * Indicate whether this edge is directed or not.
+     */
+    public abstract isDirected(): boolean;
+
+    /**
+     * Indicate whether this edge is an incoming edge of a given node or not.
+     */
+    public abstract isIncoming(node: Node<N, E>): boolean;
+
+    /**
+     * Indicate whether this edge is an incoming edge of a given node or not.
+     */
+    public abstract isOutgoing(node: Node<N, E>): boolean;
 };

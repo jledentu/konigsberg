@@ -1,11 +1,11 @@
 import should from 'should';
-import Graph from '../../src/graph';
+import DirectedGraph from '../../src/graph/directed-graph';
 import BreadthFirstSearch from'../../src/algorithms/breadth-first-search';
 import testGraph from '../fixtures/graph-data';
 
 describe('BreadthFirstSearch', function() {
     it('iterates on all reachable nodes', function() {
-        let g = new Graph(testGraph);
+        let g = new DirectedGraph(testGraph);
 
         let expectedIds       = [1, 4, 2, 3, 6, 9, 5, 7, 8];
         let expectedDistances = [0, 1, 1, 1, 1, 1, 2, 2, 3];

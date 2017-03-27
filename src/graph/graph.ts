@@ -1,13 +1,13 @@
-import Node from './node';
-import Edge from './edge/edge';
-import * as Errors from './errors';
+import Node from '../node';
+import Edge from '../edge/edge';
+import * as Errors from '../errors';
 
-interface GraphOptions<N, E> {
+export interface GraphOptions<N, E> {
     nodes?: Array<Node<N, E>>,
     edges?: Array<Edge<N, E>>
 };
 
-export default class Graph<N, E> {
+export abstract class Graph<N, E> {
 
     private _nodes: Map<number|string, Node<N, E>>;
 
@@ -47,7 +47,7 @@ export default class Graph<N, E> {
             throw new Errors.NodeAlreadyExistsError(id);
         }
 
-        let node: Node<N, E> = new Node(id, data);
+        let node: Node<N, any> = new Node(id, data);
         this._nodes.set(id, node);
         return node;
     }
@@ -88,7 +88,7 @@ export default class Graph<N, E> {
         this._nodes.delete(id);
     }
 
-    /**
+     /**
      * Add an edge between two nodes.
      *
      * @param from {number|string} ID of the source node
@@ -96,21 +96,7 @@ export default class Graph<N, E> {
      * @param data {*}             Data to store in the new edge
      * @throws {Errors.NodeNotExistsError} if one of the nodes does not exist
      */
-    addEdge(from: number|string, to: number|string, data: E): void {
-        let fromNode = this.getNode(from);
-
-        if (!fromNode) {
-            throw new Errors.NodeNotExistsError(from);
-        }
-
-        let toNode = this.getNode(to);
-
-        if (!toNode) {
-            throw new Errors.NodeNotExistsError(to);
-        }
-
-        fromNode.addEdgeTo(toNode, data);
-    }
+    abstract addEdge(from: number|string, to: number|string, data: E): void;
 
     /**
      * Check if this graph contains an edge between two nodes with given IDs.
@@ -132,7 +118,7 @@ export default class Graph<N, E> {
             return false;
         }
 
-        return fromNode.hasEdgeTo(toNode);
+        return fromNode.hasEdgeBetween(toNode);
     }
 
     /**
@@ -154,7 +140,7 @@ export default class Graph<N, E> {
             throw new Errors.NodeNotExistsError(from);
         }
 
-        return fromNode.getEdgeTo(toNode);
+        return fromNode.getEdgeBetween(toNode);
     }
 
     /**
@@ -164,14 +150,7 @@ export default class Graph<N, E> {
      * @param to   {number|string} ID of the target node of the edge to remove
      * @throws {Errors.NodeNotExistsError} if the node does not exist
      */
-    removeEdge(from: number|string, to: number|string): void {
-
-        let edge = this.getEdge(from, to);
-
-        if (edge) {
-            edge.destroy();
-        }
-    }
+    abstract removeEdge(from: number|string, to: number|string): void;
 
     /**
      * Return the adjacent nodes of a given node.
