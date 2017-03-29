@@ -18,3 +18,10 @@ export class EdgeNotExistsError extends Error {
         this.message = `The edge "${from}" to "${to}" doesn't exist`;
     }
 }
+
+export class NoLoopsError extends Error {
+    constructor(node: number | string) {
+        super();
+        this.message = `Cannot add a loop on "${node}"`;
+    }
+}

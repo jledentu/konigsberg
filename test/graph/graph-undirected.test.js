@@ -96,12 +96,35 @@ describe('UndirectedGraph', function() {
             let g = new UndirectedGraph();
             g.addNode('test2', 'data2');
             g.addEdge.bind(g, 'test', 'test2', 'dataEdge').should.throw('The node "test" doesn\'t exist');
+            g.hasEdge('test', 'test2').should.be.false();
         });
 
         it('throws an error if target node does not exist', function() {
             let g = new UndirectedGraph();
             g.addNode('test', 'data');
             g.addEdge.bind(g, 'test', 'test2', 'dataEdge').should.throw('The node "test2" doesn\'t exist');
+            g.hasEdge('test', 'test2').should.be.false();
+        });
+
+        it('throws an error if add a loop and graph has not noLoop property', function() {
+            let g = new UndirectedGraph();
+            g.addNode('test', 'data');
+            g.addEdge.bind(g, 'test', 'test', 'dataEdge').should.not.throw();
+            g.hasEdge('test', 'test').should.be.true();
+        });
+
+        it('throws an error if add a loop and graph has false noLoop property', function() {
+            let g = new UndirectedGraph({noLoops: false});
+            g.addNode('test', 'data');
+            g.addEdge.bind(g, 'test', 'test', 'dataEdge').should.not.throw();
+            g.hasEdge('test', 'test').should.be.true();
+        });
+
+        it('throws an error if add a loop and graph has noLoop property', function() {
+            let g = new UndirectedGraph({noLoops: true});
+            g.addNode('test', 'data');
+            g.addEdge.bind(g, 'test', 'test', 'dataEdge').should.throw('Cannot add a loop on "test"');
+            g.hasEdge('test', 'test').should.be.false();
         });
     });
 

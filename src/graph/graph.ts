@@ -4,12 +4,15 @@ import * as Errors from '../errors';
 
 export interface GraphOptions<N, E> {
     nodes?: Array<Node<N, E>>,
-    edges?: Array<Edge<N, E>>
+    edges?: Array<Edge<N, E>>,
+    noLoops?: boolean
 };
 
 export abstract class Graph<N, E> {
 
+    public noLoops: boolean = false;
     private _nodes: Map<number|string, Node<N, E>>;
+    private _edges: Array<Edge<N, E>> = [];
 
     constructor(options?: GraphOptions<N, E>) {
 
@@ -30,6 +33,10 @@ export abstract class Graph<N, E> {
                         this.addEdge(edge[0], edge[1], edge[2]);
                     }
                 }
+            }
+
+            if (Object.prototype.hasOwnProperty.call(options, 'noLoops')) {
+                this.noLoops = options.noLoops;
             }
         }
     }
@@ -88,7 +95,7 @@ export abstract class Graph<N, E> {
         this._nodes.delete(id);
     }
 
-     /**
+    /**
      * Add an edge between two nodes.
      *
      * @param from {number|string} ID of the source node
@@ -96,7 +103,38 @@ export abstract class Graph<N, E> {
      * @param data {*}             Data to store in the new edge
      * @throws {Errors.NodeNotExistsError} if one of the nodes does not exist
      */
-    abstract addEdge(from: number|string, to: number|string, data: E): void;
+    addEdge(from: number|string, to: number|string, data: E): void {
+        let fromNode = this.getNode(from);
+
+        if (!fromNode) {
+            throw new Errors.NodeNotExistsError(from);
+        }
+
+        let toNode = this.getNode(to);
+
+        if (!toNode) {
+            throw new Errors.NodeNotExistsError(to);
+        }
+
+        if (this.noLoops && fromNode === toNode) {
+            throw new Errors.NoLoopsError(from);
+        }
+
+        if (!this._edges) {
+            this._edges = [];
+        }
+
+        this._edges.push(this.createEdge(fromNode, toNode, data));
+    }
+
+    /**
+     * Create a new edge.
+     *
+     * @param from {Node} Source node
+     * @param to   {Node} Target node
+     * @param data {*}    Data to store in the new edge
+     */
+    public abstract createEdge(from: Node<N, E>, to: Node<N, E>, data: E): Edge<N, E>;
 
     /**
      * Check if this graph contains an edge between two nodes with given IDs.
@@ -150,7 +188,19 @@ export abstract class Graph<N, E> {
      * @param to   {number|string} ID of the target node of the edge to remove
      * @throws {Errors.NodeNotExistsError} if the node does not exist
      */
-    abstract removeEdge(from: number|string, to: number|string): void;
+    removeEdge(from: number|string, to: number|string): void {
+
+        let edge = this.getEdge(from, to);
+
+        if (edge) {
+            edge.destroy();
+        }
+
+        let index = this._edges.findIndex((e) => e === edge);
+        if (index !== -1) {
+            this._edges.splice(index, 1);
+        }
+    }
 
     /**
      * Return the adjacent nodes of a given node.
