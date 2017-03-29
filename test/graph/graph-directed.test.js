@@ -1,4 +1,5 @@
 import should from 'should';
+import sinon from 'sinon';
 import DirectedGraph from '../../src/graph/directed-graph';
 import testGraph from '../fixtures/graph-data';
 
@@ -15,6 +16,17 @@ describe('DirectedGraph', function() {
             let g = new DirectedGraph();
             let result = g.addNode('test', 'data');
             g.addNode.bind(g, 'test', 'data').should.throw('The node "test" already exists');
+        });
+
+        it('should invoke event handlers', function() {
+            let g = new DirectedGraph();
+            let spy = sinon.spy();
+            let spy2 = sinon.spy();
+            g.on('nodeCreated', spy);
+            g.on('nodeCreated', spy2);
+            let result = g.addNode('test', 'data');
+            spy.calledOnce.should.be.true();
+            spy2.calledOnce.should.be.true();
         });
     });
 
@@ -81,6 +93,18 @@ describe('DirectedGraph', function() {
 
             g.hasNode('test').should.be.false();
         });
+
+        it('should invoke event handlers', function() {
+            let g = new DirectedGraph();
+            let spy = sinon.spy();
+            let spy2 = sinon.spy();
+            g.on('nodeDeleted', spy);
+            g.on('nodeDeleted', spy2);
+            g.addNode('test', 'data');
+            g.removeNode('test');
+            spy.calledOnce.should.be.true();
+            spy2.calledOnce.should.be.true();
+        });
     });
 
     describe('#addEdge', function() {
@@ -125,6 +149,18 @@ describe('DirectedGraph', function() {
             g.addNode('test', 'data');
             g.addEdge.bind(g, 'test', 'test', 'dataEdge').should.throw('Cannot add a loop on "test"');
             g.hasEdge('test', 'test').should.be.false();
+        });
+
+        it('should invoke event handlers', function() {
+            let g = new DirectedGraph();
+            let spy = sinon.spy();
+            let spy2 = sinon.spy();
+            g.on('edgeCreated', spy);
+            g.on('edgeCreated', spy2);
+            g.addNode('test', 'data');
+            g.addEdge('test', 'test', 'dataEdge');
+            spy.calledOnce.should.be.true();
+            spy2.calledOnce.should.be.true();
         });
     });
 

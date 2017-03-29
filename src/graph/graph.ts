@@ -13,6 +13,7 @@ export abstract class Graph<N, E> {
     public noLoops: boolean = false;
     private _nodes: Map<number|string, Node<N, E>>;
     private _edges: Array<Edge<N, E>> = [];
+    private _handlers: {[id: string]: Array<() => void>;} = {};
 
     constructor(options?: GraphOptions<N, E>) {
 
@@ -56,6 +57,9 @@ export abstract class Graph<N, E> {
 
         let node: Node<N, any> = new Node(id, data);
         this._nodes.set(id, node);
+
+        this._notifyHandlers('nodeCreated');
+
         return node;
     }
 
@@ -93,6 +97,8 @@ export abstract class Graph<N, E> {
 
         node.destroy();
         this._nodes.delete(id);
+
+        this._notifyHandlers('nodeDeleted');
     }
 
     /**
@@ -125,6 +131,8 @@ export abstract class Graph<N, E> {
         }
 
         this._edges.push(this.createEdge(fromNode, toNode, data));
+
+        this._notifyHandlers('edgeCreated');
     }
 
     /**
@@ -199,6 +207,8 @@ export abstract class Graph<N, E> {
                 this._edges.splice(index, 1);
             }
         }
+
+        this._notifyHandlers('edgeDeleted');
     }
 
     /**
@@ -219,13 +229,60 @@ export abstract class Graph<N, E> {
 
     /**
      * Return degree (number of connected edges) of a node.
-     * 
+     *
      * @param id {number | string} ID of the node
      * @return {number} Number of connected edges to this node
      */
     degree(id: number | string): number {
         let node = this.getNode(id);
         return node ? node.degree : 0;
+    }
+
+    // EVENT HANDLING
+
+    /**
+     * Add an event handler.
+     *
+     * @param {string}   eventName Name of the event to handle
+     * @param {function} handler   Event handler
+     */
+    public on(eventName: string, handler: () => void): void {
+        if (!Array.isArray(this._handlers[eventName])) {
+            this._handlers[eventName] = [];
+        }
+
+        this._handlers[eventName].push(handler);
+    }
+
+    /**
+     * Remove an event handler.
+     *
+     * @param {string}   eventName Name of the event
+     * @param {function} handler   Event handler to remove
+     */
+    public off(eventName: string, handler: () => void): void {
+        if (Array.isArray(this._handlers[eventName])) {
+            let idx = this._handlers[eventName].indexOf(handler);
+
+            if (idx !== -1) {
+                this._handlers[eventName].splice(idx, 1);
+            }
+        }
+    }
+
+    /**
+     * Notify event handlers that an event occurred.
+     *
+     * @param {string} eventName Name of the event
+     */
+    private _notifyHandlers(eventName: string): void {
+        if (Array.isArray(this._handlers[eventName])) {
+            for (let handler of this._handlers[eventName]) {
+                if (typeof handler === 'function') {
+                    handler.call(this);
+                }
+            }
+        }
     }
 
     // ASSERTIONS
