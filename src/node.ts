@@ -10,7 +10,7 @@ export default class Node<N, E> {
     /**
      * Edges
      */
-    private _edges: Map<Node<N, E>, Edge<N, E>>;
+    private _edges: Array<Edge<N, E>> = [];
 
     /**
      * Node data
@@ -22,7 +22,6 @@ export default class Node<N, E> {
      */
     constructor(id: number|string, data: N) {
         this._id = id;
-        this._edges = new Map();
         this._data = data;
     }
 
@@ -37,7 +36,7 @@ export default class Node<N, E> {
      * Return edges connected to this node
      */
     public get edges(): Array<Edge<N, E>> {
-        return Array.from(this._edges.values());
+        return this._edges;
     }
 
     /**
@@ -59,6 +58,13 @@ export default class Node<N, E> {
     }
 
     /**
+     * Return degree (number of connected edges) of this node.
+     */
+    public get degree(): number {
+        return this._edges.length;
+    }
+
+    /**
      * Return data attached to this node
      */
     public get data(): N {
@@ -68,33 +74,34 @@ export default class Node<N, E> {
     /**
      * Add a directed edge from this node to an other node.
      */
-    public attachEdge(adjacent: Node<N, E>, edge: Edge<N, E>) {
-        this._edges.set(adjacent, edge);
+    public attachEdge(edge: Edge<N, E>) {
+        this._edges.push(edge);
     }
 
     /**
      * Indicate whether this node has an edge connected to a given other node or not.
      */
     public hasEdgeBetween(adjacent: Node<N, E>): boolean {
-        return this._edges.has(adjacent);
+        return this.getEdgeBetween(adjacent).length > 0;
     }
 
     /**
-     * Return an edge from this node to a given node.
+     * Return edges from this node to a given node.
      */
-    public getEdgeBetween(adjacent: Node<N, E>): Edge<N, E> {
-        return this._edges.get(adjacent);
+    public getEdgeBetween(adjacent: Node<N, E>): Array<Edge<N, E>> {
+        return this.edges.filter((e) => {
+            return e.adjacent(this) === adjacent
+        });
     }
 
     /**
      * Remove an edge connected to this node.
      */
     public detachEdge(edge: Edge<N, E>) {
-        for (let [adjacent, e] of this._edges) {
-            if (e === edge) {
-                this._edges.delete(adjacent);
-                break;
-            }
+        let idx = this._edges.indexOf(edge);
+
+        if (idx !== -1) {
+            this._edges.splice(idx, 1);
         }
     }
 
@@ -102,14 +109,15 @@ export default class Node<N, E> {
      * Return adjacent nodes.
      */
     public adjacents() {
-        return Array.from(this._edges.keys());
+        return this._edges.map((e) => e.adjacent(this));
     }
 
     /**
      * Destroy this node.
      */
     public destroy() {
-        for (let edge of this._edges.values()) {
+        for (let edge of this._edges) {
+            console.log(edge);
             edge.destroy();
         }
     }

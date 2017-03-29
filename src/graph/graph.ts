@@ -163,9 +163,9 @@ export abstract class Graph<N, E> {
      * Return the data associated with a node.
      *
      * @param id {number|string} ID of the node to check
-     * @return {*} Data of the node if it exists, else undefined
+     * @return {Array<Edge>} Data of the node if it exists, else undefined
      */
-    getEdge(from: number|string, to: number|string): Edge<N, E> {
+    getEdge(from: number|string, to: number|string): Array<Edge<N, E>> {
         let fromNode = this.getNode(from);
 
         if (!fromNode) {
@@ -189,16 +189,15 @@ export abstract class Graph<N, E> {
      * @throws {Errors.NodeNotExistsError} if the node does not exist
      */
     removeEdge(from: number|string, to: number|string): void {
+        let edges = this.getEdge(from, to);
 
-        let edge = this.getEdge(from, to);
-
-        if (edge) {
+        for (let edge of edges) {
             edge.destroy();
-        }
 
-        let index = this._edges.findIndex((e) => e === edge);
-        if (index !== -1) {
-            this._edges.splice(index, 1);
+            let index = this._edges.indexOf(edge);
+            if (index !== -1) {
+                this._edges.splice(index, 1);
+            }
         }
     }
 
@@ -216,6 +215,17 @@ export abstract class Graph<N, E> {
         }
 
         return [];
+    }
+
+    /**
+     * Return degree (number of connected edges) of a node.
+     * 
+     * @param id {number | string} ID of the node
+     * @return {number} Number of connected edges to this node
+     */
+    degree(id: number | string): number {
+        let node = this.getNode(id);
+        return node ? node.degree : 0;
     }
 
     // ASSERTIONS

@@ -174,4 +174,38 @@ describe('UndirectedGraph', function() {
             ids.should.be.eql([4, 2, 3, 6, 9]);
         });
     });
+
+    describe('#degree', function() {
+        it('returns 0 if the node does not exist', function() {
+            let g = new UndirectedGraph();
+
+            g.degree('test').should.be.eql(0);
+        });
+
+        it('returns 2 if the node has just one loop', function() {
+            let g = new UndirectedGraph();
+            g.addNode('test', 'data');
+            g.addEdge('test', 'test', 'data');
+            g.degree('test').should.be.eql(2);
+        });
+
+        it('returns number of edges connected to this node', function() {
+            let g = new UndirectedGraph(testGraph);
+
+            g.degree(1).should.be.eql(5);
+            g.degree(2).should.be.eql(3);
+        });
+
+        it('returns 0 after removing all nodes', function() {
+            let g = new UndirectedGraph(testGraph);
+            g.removeEdge(1, 2);
+            g.removeEdge(1, 3);
+            g.removeEdge(1, 4);
+            g.removeEdge(1, 6);
+            g.removeEdge(1, 9);
+
+            g.degree(1).should.be.eql(0);
+            g.degree(2).should.be.eql(2);
+        });
+    });
 });

@@ -25,16 +25,31 @@ export abstract class Edge<N, E> {
         this._target = target;
         this._data = data;
 
-        source.attachEdge(this._target, this);
-        target.attachEdge(this._source, this);
+        source.attachEdge(this);
+        target.attachEdge(this);
     }
 
     /**
      * Destroy this edge.
      */
     public destroy() {
-        this._source.detachEdge(this._target);
-        this._target.detachEdge(this._source);
+        this._source.detachEdge(this);
+        this._target.detachEdge(this);
+    }
+
+    /**
+     * Get the adjacent connected to the given node by this edge.
+     * 
+     * @param node 
+     */
+    public adjacent(node: Node<N, E>): Node<N, E> {
+        if (node === this._source) {
+            return this._target;
+        } else if (node === this._target) {
+            return this._source;
+        } else {
+            return undefined;
+        }
     }
 
     /**
