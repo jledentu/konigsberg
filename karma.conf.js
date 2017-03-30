@@ -43,6 +43,12 @@ module.exports = function(config) {
             dir : 'coverage/',
             subdir: '.',
             file: 'coverage.json'
+        },
+
+        browserConsoleLogOptions: {
+            level: 'log',
+            format: '%b %T: %m',
+            terminal: true
         }
     });
 };
