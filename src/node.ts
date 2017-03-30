@@ -97,7 +97,7 @@ export default class Node<N, E> {
     /**
      * Remove an edge connected to this node.
      */
-    public detachEdge(edge: Edge<N, E>) {
+    public detachEdge(edge: Edge<N, E>): void {
         let idx = this._edges.indexOf(edge);
 
         if (idx !== -1) {
@@ -108,14 +108,14 @@ export default class Node<N, E> {
     /**
      * Return adjacent nodes.
      */
-    public adjacents() {
+    public adjacents(): Array<Node<N, E>> {
         return this._edges.map((e) => e.adjacent(this));
     }
 
     /**
      * Destroy this node.
      */
-    public destroy() {
+    public destroy(): void {
         for (let edge of this._edges) {
             console.log(edge);
             edge.destroy();
