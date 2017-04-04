@@ -233,4 +233,29 @@ describe('DirectedGraph', function() {
             g.degree(2).should.be.eql(2);
         });
     });
+
+    describe('#order', function() {
+        it('returns 0 if the graph has no node', function() {
+            let g = new DirectedGraph();
+            g.order.should.be.eql(0);
+        });
+
+        it('returns the number of nodes of the graph', function() {
+            let g = new DirectedGraph(testGraph);
+            g.order.should.be.eql(10);
+        });
+    });
+
+    describe('#size', function() {
+        it('returns 0 if the graph has no edge', function() {
+            let g = new DirectedGraph();
+            g.addNode('test', 'data');
+            g.size.should.be.eql(0);
+        });
+
+        it('returns the number of nodes of the graph', function() {
+            let g = new DirectedGraph(testGraph);
+            g.size.should.be.eql(9);
+        });
+    });
 });

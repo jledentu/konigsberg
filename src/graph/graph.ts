@@ -238,6 +238,24 @@ export abstract class Graph<N, E> {
         return node ? node.degree : 0;
     }
 
+    /**
+     * Return the order of this graph (i.e the number of nodes).
+     *
+     * @return {number} Number of nodes
+     */
+    public get order(): number {
+        return this._nodes.size;
+    }
+
+    /**
+     * Return the size of this graph (i.e the number of edges).
+     *
+     * @return {number} Number of edges
+     */
+    public get size(): number {
+        return this._edges.length;
+    }
+
     // EVENT HANDLING
 
     /**
