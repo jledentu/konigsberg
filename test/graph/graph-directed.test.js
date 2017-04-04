@@ -162,6 +162,19 @@ describe('DirectedGraph', function() {
             spy.calledOnce.should.be.true();
             spy2.calledOnce.should.be.true();
         });
+
+        it('should not invoke removed event handlers', function() {
+            let g = new DirectedGraph();
+            let spy = sinon.spy();
+            let spy2 = sinon.spy();
+            g.on('edgeCreated', spy);
+            g.on('edgeCreated', spy2);
+            g.off('edgeCreated', spy);
+            g.addNode('test', 'data');
+            g.addEdge('test', 'test', 'dataEdge');
+            spy.calledOnce.should.be.false();
+            spy2.calledOnce.should.be.true();
+        });
     });
 
     describe('#hasEdge', function() {
@@ -189,6 +202,28 @@ describe('DirectedGraph', function() {
             g.hasEdge('test', 'test2').should.be.true();
             g.hasEdge('test2', 'test').should.be.true();
             g.hasEdge('', '').should.be.false();
+        });
+    });
+
+    describe('#getEdge', function() {
+        it('should throw an error if the first endpoint doesn\'t exist', function() {
+            let g = new DirectedGraph();
+            g.addNode('test', 'data');
+            g.getEdge.bind(g, 'test', 'test2').should.throw('The node "test" doesn\'t exist');
+        });
+
+        it('should throw an error if the second endpoint doesn\'t exist', function() {
+            let g = new DirectedGraph();
+            g.addNode('test', 'data');
+            g.getEdge.bind(g, 'test2', 'test').should.throw('The node "test2" doesn\'t exist');
+        });
+
+        it('should return the array of edges between two edges', function() {
+            let g = new DirectedGraph();
+            g.addNode('test', 'data');
+            g.addNode('test2', 'data2');
+            let e = g.addEdge('test', 'test2', 'dataEdge');
+            g.getEdge('test', 'test2').should.be.eql([e]);
         });
     });
 

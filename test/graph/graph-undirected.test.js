@@ -192,6 +192,28 @@ describe('UndirectedGraph', function() {
         });
     });
 
+    describe('#getEdge', function() {
+        it('should throw an error if the first endpoint doesn\'t exist', function() {
+            let g = new UndirectedGraph();
+            g.addNode('test', 'data');
+            g.getEdge.bind(g, 'test', 'test2').should.throw('The node "test" doesn\'t exist');
+        });
+
+        it('should throw an error if the second endpoint doesn\'t exist', function() {
+            let g = new UndirectedGraph();
+            g.addNode('test', 'data');
+            g.getEdge.bind(g, 'test2', 'test').should.throw('The node "test2" doesn\'t exist');
+        });
+
+        it('should return the array of edges between two edges', function() {
+            let g = new UndirectedGraph();
+            g.addNode('test', 'data');
+            g.addNode('test2', 'data2');
+            let e = g.addEdge('test', 'test2', 'dataEdge');
+            g.getEdge('test', 'test2').should.be.eql([e]);
+        });
+    });
+
     describe('#neighbors', function() {
         it('returns [] if the node does not exist', function() {
             let g = new UndirectedGraph();

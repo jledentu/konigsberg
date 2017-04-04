@@ -108,8 +108,9 @@ export abstract class Graph<N, E> {
      * @param to   {number|string} ID o  the target node
      * @param data {*}             Data to store in the new edge
      * @throws {Errors.NodeNotExistsError} if one of the nodes does not exist
+     * @returns {Edge} Added edge
      */
-    public addEdge(from: number|string, to: number|string, data: E): void {
+    public addEdge(from: number|string, to: number|string, data: E): Edge<N, E> {
         let fromNode = this.getNode(from);
 
         if (!fromNode) {
@@ -130,9 +131,12 @@ export abstract class Graph<N, E> {
             this._edges = [];
         }
 
-        this._edges.push(this.createEdge(fromNode, toNode, data));
+        let edge = this.createEdge(fromNode, toNode, data);
+        this._edges.push(edge);
 
         this._notifyHandlers('edgeCreated');
+
+        return edge;
     }
 
     /**
