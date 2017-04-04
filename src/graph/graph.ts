@@ -1,5 +1,5 @@
 import Node from '../node';
-import Edge from '../edge/edge';
+import {Edge} from '../edge/edge';
 import * as Errors from '../errors';
 
 export interface GraphOptions<N, E> {

@@ -1,4 +1,4 @@
-import Edge from './edge/edge';
+import {Edge} from './edge/edge';
 
 export default class Node<N, E> {
 
@@ -53,7 +53,7 @@ export default class Node<N, E> {
      */
     public get outEdges(): Array<Edge<N, E>> {
         return this.edges.filter((e) => {
-            return e.isOutcoming(this);
+            return e.isOutgoing(this);
         });
     }
 
