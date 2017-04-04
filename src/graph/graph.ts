@@ -50,7 +50,7 @@ export abstract class Graph<N, E> {
      * @throws {Errors.NodeAlreadyExistsError} if the graph already contains a
      *         node with the given ID
      */
-    addNode(id: number|string, data: N) {
+    public addNode(id: number|string, data: N) {
         if (this.hasNode(id)) {
             throw new Errors.NodeAlreadyExistsError(id);
         }
@@ -69,7 +69,7 @@ export abstract class Graph<N, E> {
      * @param id {number | string} ID of the node to check
      * @return {boolean}           True if the node exists, else false
      */
-    hasNode(id: number|string): boolean {
+    public hasNode(id: number|string): boolean {
         return this._nodes.has(id);
     }
 
@@ -79,7 +79,7 @@ export abstract class Graph<N, E> {
      * @param id {number|string} ID of the node to check
      * @return {*}                 Data of the node if it exists, else undefined
      */
-    getNode(id: number|string): Node<N, E> {
+    public getNode(id: number|string): Node<N, E> {
         return this._nodes.get(id);
     }
 
@@ -89,7 +89,7 @@ export abstract class Graph<N, E> {
      * @param id {number|string} ID of the node to remove
      * @throws {Errors.NodeNotExistsError} if the node does not exist
      */
-    removeNode(id: number|string): void {
+    public removeNode(id: number|string): void {
         let node = this.getNode(id);
         if (!node) {
             throw new Errors.NodeNotExistsError(id);
@@ -109,7 +109,7 @@ export abstract class Graph<N, E> {
      * @param data {*}             Data to store in the new edge
      * @throws {Errors.NodeNotExistsError} if one of the nodes does not exist
      */
-    addEdge(from: number|string, to: number|string, data: E): void {
+    public addEdge(from: number|string, to: number|string, data: E): void {
         let fromNode = this.getNode(from);
 
         if (!fromNode) {
@@ -151,7 +151,7 @@ export abstract class Graph<N, E> {
      * @param id {number|string} ID of the node to check
      * @return {boolean} True if the node exists, else false
      */
-    hasEdge(from: number | string, to: number | string): boolean {
+    public hasEdge(from: number | string, to: number | string): boolean {
         let fromNode = this.getNode(from);
 
         if (!fromNode) {
@@ -173,7 +173,7 @@ export abstract class Graph<N, E> {
      * @param id {number|string} ID of the node to check
      * @return {Array<Edge>} Data of the node if it exists, else undefined
      */
-    getEdge(from: number|string, to: number|string): Array<Edge<N, E>> {
+    public getEdge(from: number|string, to: number|string): Array<Edge<N, E>> {
         let fromNode = this.getNode(from);
 
         if (!fromNode) {
@@ -196,7 +196,7 @@ export abstract class Graph<N, E> {
      * @param to   {number|string} ID of the target node of the edge to remove
      * @throws {Errors.NodeNotExistsError} if the node does not exist
      */
-    removeEdge(from: number|string, to: number|string): void {
+    public removeEdge(from: number|string, to: number|string): void {
         let edges = this.getEdge(from, to);
 
         for (let edge of edges) {
@@ -217,7 +217,7 @@ export abstract class Graph<N, E> {
      * @param id {number | string} ID of the node
      * @return {Array} Array containing the adjacent nodes IDs
      */
-    adjacents(id: number | string): Array<Node<N, E>> {
+    public adjacents(id: number | string): Array<Node<N, E>> {
         let node = this.getNode(id);
 
         if (node) {
@@ -233,7 +233,7 @@ export abstract class Graph<N, E> {
      * @param id {number | string} ID of the node
      * @return {number} Number of connected edges to this node
      */
-    degree(id: number | string): number {
+    public degree(id: number | string): number {
         let node = this.getNode(id);
         return node ? node.degree : 0;
     }

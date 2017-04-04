@@ -15,7 +15,7 @@ export default class DirectedGraph<N, E> extends Graph<N, E>{
      * @param to   {Node} Target node
      * @param data {*}    Data to store in the new edge
      */
-    createEdge(from: Node<N, E>, to: Node<N, E>, data: E): DirectedEdge<N, E> {
+    public createEdge(from: Node<N, E>, to: Node<N, E>, data: E): DirectedEdge<N, E> {
         return new DirectedEdge<N, E>(from, to, data);
     }
 }

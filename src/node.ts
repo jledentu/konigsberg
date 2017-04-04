@@ -44,7 +44,7 @@ export default class Node<N, E> {
      */
     public get inEdges(): Array<Edge<N, E>> {
         return this.edges.filter((e) => {
-            return e.isIncoming(this); 
+            return e.isIncoming(this);
         });
     }
 
@@ -53,7 +53,7 @@ export default class Node<N, E> {
      */
     public get outEdges(): Array<Edge<N, E>> {
         return this.edges.filter((e) => {
-            return e.isOutcoming(this); 
+            return e.isOutcoming(this);
         });
     }
 

@@ -15,7 +15,7 @@ export default class UndirectedGraph<N, E> extends Graph<N, E> {
      * @param to   {Node} Target node
      * @param data {*}    Data to store in the new edge
      */
-    createEdge(from: Node<N, E>, to: Node<N, E>, data: E): UndirectedEdge<N, E> {
+    public createEdge(from: Node<N, E>, to: Node<N, E>, data: E): UndirectedEdge<N, E> {
         return new UndirectedEdge<N, E>(from, to, data);
     }
 }
