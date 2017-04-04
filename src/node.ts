@@ -81,16 +81,16 @@ export default class Node<N, E> {
     /**
      * Indicate whether this node has an edge connected to a given other node or not.
      */
-    public hasEdgeBetween(adjacent: Node<N, E>): boolean {
-        return this.getEdgeBetween(adjacent).length > 0;
+    public hasEdgeBetween(neighbor: Node<N, E>): boolean {
+        return this.getEdgeBetween(neighbor).length > 0;
     }
 
     /**
      * Return edges from this node to a given node.
      */
-    public getEdgeBetween(adjacent: Node<N, E>): Array<Edge<N, E>> {
+    public getEdgeBetween(neighbor: Node<N, E>): Array<Edge<N, E>> {
         return this.edges.filter((e) => {
-            return e.adjacent(this) === adjacent
+            return e.neighbor(this) === neighbor
         });
     }
 
@@ -106,10 +106,38 @@ export default class Node<N, E> {
     }
 
     /**
-     * Return adjacent nodes.
+     * Return neighbors nodes.
      */
-    public adjacents(): Array<Node<N, E>> {
-        return this._edges.map((e) => e.adjacent(this));
+    public neighbors(): Array<Node<N, E>> {
+        return this._edges.map((e) => e.neighbor(this));
+    }
+
+    /**
+     * Return direct predecessors of this node.
+     */
+    public directPredecessors(): Array<Node<N, E>> {
+        let predecessors = [];
+        for (let e of this._edges) {
+            let predecessor = e.directPredecessor(this);
+            if (predecessor) {
+                predecessors.push(predecessor);
+            }
+        }
+        return predecessors;
+    }
+
+    /**
+     * Return direct successors of this node.
+     */
+    public directSuccessors(): Array<Node<N, E>> {
+        let successors = [];
+        for (let e of this._edges) {
+            let successor = e.directSuccessor(this);
+            if (successor) {
+                successors.push(successor);
+            }
+        }
+        return successors;
     }
 
     /**

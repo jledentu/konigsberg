@@ -192,21 +192,21 @@ describe('UndirectedGraph', function() {
         });
     });
 
-    describe('#adjacents', function() {
+    describe('#neighbors', function() {
         it('returns [] if the node does not exist', function() {
             let g = new UndirectedGraph();
 
-            g.adjacents('test').should.be.eql([]);
+            g.neighbors('test').should.be.eql([]);
         });
 
-        it('returns the adjacents nodes of a given node', function() {
+        it('returns the neighbors of a given node', function() {
             let g = new UndirectedGraph(testGraph);
 
-            let adjacents = g.adjacents(1);
+            let neighbors = g.neighbors(1);
 
-            adjacents.should.be.Array();
-            adjacents.length.should.be.eql(5);
-            let ids = adjacents.map(node => node.id);
+            neighbors.should.be.Array();
+            neighbors.length.should.be.eql(5);
+            let ids = neighbors.map(node => node.id);
             ids.should.be.eql([4, 2, 3, 6, 9]);
         });
     });

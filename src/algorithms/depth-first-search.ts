@@ -24,14 +24,14 @@ export default class DepthFirstSearch<N, E> {
 
                 if (visited.indexOf(current.node) === -1) {
                     visited.push(current.node);
-                    let adjacents = current.node.adjacents().map((adj) => {
+                    let successors = current.node.directSuccessors().map((adj) => {
                         if (visited.indexOf(adj) === -1) {
                             visited.push(adj);
                             return {node: adj, d: current.d + 1};
                         }
                     })
                     .filter((adj) => adj !== undefined);
-                    stack.unshift.apply(stack, adjacents);
+                    stack.unshift.apply(stack, successors);
                 } else {
                     return this.next();
                 }

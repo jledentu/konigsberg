@@ -192,11 +192,60 @@ describe('DirectedGraph', function() {
         });
     });
 
-    describe('#adjacents', function() {
+    describe('#neighbors', function() {
         it('returns [] if the node does not exist', function() {
             let g = new DirectedGraph();
 
-            g.adjacents('test').should.be.eql([]);
+            g.neighbors('test').should.be.eql([]);
+        });
+
+        it('returns the neighbors of a given node', function() {
+            let g = new DirectedGraph(testGraph);
+
+            let neighbors = g.neighbors(1);
+
+            neighbors.should.be.Array();
+            neighbors.length.should.be.eql(5);
+            let ids = neighbors.map(node => node.id);
+            ids.should.be.eql([4, 2, 3, 6, 9]);
+        });
+    });
+
+    describe('#directPredecessors', function() {
+        it('returns [] if the node does not exist', function() {
+            let g = new DirectedGraph();
+
+            g.directPredecessors('test').should.be.eql([]);
+        });
+
+        it('returns the direct predecessors of a given node', function() {
+            let g = new DirectedGraph(testGraph);
+
+            let predecessors = g.directPredecessors(6);
+
+            predecessors.should.be.Array();
+            predecessors.length.should.be.eql(2);
+            let ids = predecessors.map(node => node.id);
+            ids.should.be.eql([1, 2]);
+        });
+    });
+
+    describe('#directSuccessors', function() {
+        it('returns [] if the node does not exist', function() {
+            let g = new DirectedGraph();
+
+            g.directSuccessors('test').should.be.eql([]);
+        });
+
+        it('returns the direct successors of a given node', function() {
+            let g = new DirectedGraph(testGraph);
+
+            let successors = g.directSuccessors(1);
+
+            successors.should.be.Array();
+            successors.length.should.be.eql(5);
+            let ids = successors.map(node => node.id);
+            ids.should.be.eql([4, 2, 3, 6, 9]);
         });
     });
 

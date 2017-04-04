@@ -212,16 +212,16 @@ export abstract class Graph<N, E> {
     }
 
     /**
-     * Return the adjacent nodes of a given node.
+     * Return the neighbors of a given node.
      *
      * @param id {number | string} ID of the node
-     * @return {Array} Array containing the adjacent nodes IDs
+     * @return {Array} Array containing the neighbors nodes IDs
      */
-    public adjacents(id: number | string): Array<Node<N, E>> {
+    public neighbors(id: number | string): Array<Node<N, E>> {
         let node = this.getNode(id);
 
         if (node) {
-            return node.adjacents();
+            return node.neighbors();
         }
 
         return [];

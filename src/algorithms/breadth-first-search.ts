@@ -21,7 +21,7 @@ export default class BreadthFirstSearch<N, E> {
                 }
 
                 let current = queue.shift();
-                for (let adj of current.node.adjacents()) {
+                for (let adj of current.node.directSuccessors()) {
                     if (visited.indexOf(adj) === -1) {
                         queue.push({node: adj, d: current.d + 1});
                         visited.push(adj);

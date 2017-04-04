@@ -38,11 +38,11 @@ export abstract class Edge<N, E> {
     }
 
     /**
-     * Get the adjacent connected to the given node by this edge.
-     * 
-     * @param node 
+     * Get the neighbor of the given node by this edge.
+     *
+     * @param node
      */
-    public adjacent(node: Node<N, E>): Node<N, E> {
+    public neighbor(node: Node<N, E>): Node<N, E> {
         if (node === this._source) {
             return this._target;
         } else if (node === this._target) {
@@ -66,4 +66,18 @@ export abstract class Edge<N, E> {
      * Indicate whether this edge is an incoming edge of a given node or not.
      */
     public abstract isOutgoing(node: Node<N, E>): boolean;
+
+    /**
+     * Get the direct predecessor of the given node by this edge.
+     *
+     * @param node
+     */
+    public abstract directPredecessor(node: Node<N, E>): Node<N, E>;
+
+    /**
+     * Get the direct successor of the given node by this edge.
+     *
+     * @param node
+     */
+    public abstract directSuccessor(node: Node<N, E>): Node<N, E>;
 };

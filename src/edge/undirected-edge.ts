@@ -23,4 +23,22 @@ export default class UndirectedEdge<N, E> extends Edge<N, E> {
     public isOutgoing(node: Node<N, E>): boolean {
         return this.isIncoming(node);
     }
+
+    /**
+     * Get the direct predecessor of the given node by this edge.
+     *
+     * @param node
+     */
+    public directPredecessor(node: Node<N, E>): Node<N, E> {
+        return this.neighbor(node);
+    }
+
+    /**
+     * Get the direct successor of the given node by this edge.
+     *
+     * @param node
+     */
+    public directSuccessor(node: Node<N, E>): Node<N, E> {
+        return this.neighbor(node);
+    }
 };
