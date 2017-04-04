@@ -302,18 +302,4 @@ export abstract class Graph<N, E> {
             }
         }
     }
-
-    // ASSERTIONS
-
-    _assertNodeExist(node: string) {
-        if (!this.hasNode(node)) {
-            throw new Errors.NodeNotExistsError(node);
-        }
-    }
-
-    _assertEdgeExist(from: string, to: string) {
-        if (!this.hasEdge(from, to)) {
-            throw new Errors.EdgeNotExistsError(from, to);
-        }
-    }
 }
