@@ -1,6 +1,6 @@
 {
   "name": "konigsberg",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A browser/Node.js library for manipulating graphs",
   "main": "dist/konigsberg.js",
   "scripts": {
