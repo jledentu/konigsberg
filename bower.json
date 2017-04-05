@@ -1,0 +1,20 @@
+{
+  "name": "konigsberg",
+  "description": "A browser/Node.js library for manipulating graphs",
+  "main": "dist/konigsberg.js",
+  "authors": [
+    "Jérémie Ledentu <jledentu@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "graph"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
