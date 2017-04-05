@@ -28,6 +28,13 @@ describe('UndirectedGraph', function() {
             spy.calledOnce.should.be.true();
             spy2.calledOnce.should.be.true();
         });
+
+        it('should do nothing if the graph is frozen', function() {
+            let g = new UndirectedGraph();
+            g.freeze();
+            g.addNode('test', 'data');
+            g.hasNode('test').should.be.false();
+        });
     });
 
     describe('#hasNode', function() {
@@ -105,6 +112,14 @@ describe('UndirectedGraph', function() {
             spy.calledOnce.should.be.true();
             spy2.calledOnce.should.be.true();
         });
+
+        it('should do nothing if the graph is frozen', function() {
+            let g = new UndirectedGraph();
+            g.addNode('test', 'data');
+            g.freeze();
+            g.removeNode('test');
+            g.hasNode('test').should.be.true();
+        });
     });
 
     describe('#addEdge', function() {
@@ -161,6 +176,27 @@ describe('UndirectedGraph', function() {
             g.addEdge('test', 'test', 'dataEdge');
             spy.calledOnce.should.be.true();
             spy2.calledOnce.should.be.true();
+        });
+
+        it('should not invoke removed event handlers', function() {
+            let g = new UndirectedGraph();
+            let spy = sinon.spy();
+            let spy2 = sinon.spy();
+            g.on('edgeCreated', spy);
+            g.on('edgeCreated', spy2);
+            g.off('edgeCreated', spy);
+            g.addNode('test', 'data');
+            g.addEdge('test', 'test', 'dataEdge');
+            spy.calledOnce.should.be.false();
+            spy2.calledOnce.should.be.true();
+        });
+
+        it('should do nothing if the graph is frozen', function() {
+            let g = new UndirectedGraph();
+            g.addNode('test', 'data');
+            g.freeze();
+            g.addEdge('test', 'test', 'dataEdge');
+            g.hasEdge('test', 'test').should.be.false();
         });
     });
 
@@ -289,6 +325,16 @@ describe('UndirectedGraph', function() {
         it('returns the number of nodes of the graph', function() {
             let g = new UndirectedGraph(testGraph);
             g.size.should.be.eql(9);
+        });
+    });
+
+    describe('#freeze', () => {
+        it('should change frozen attribute', () => {
+            let g = new UndirectedGraph();
+            g.freeze();
+            g.frozen.should.eql(true);
+            g.freeze(false);
+            g.frozen.should.eql(false);
         });
     });
 });

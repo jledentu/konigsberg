@@ -13,6 +13,7 @@ export abstract class Graph<N, E> {
     public noLoops: boolean = false;
     private _nodes: Map<number|string, Node<N, E>>;
     private _edges: Array<Edge<N, E>> = [];
+    private _frozen: boolean = false;
     private _handlers: {[id: string]: Array<() => void>;} = {};
 
     constructor(options?: GraphOptions<N, E>) {
@@ -43,6 +44,33 @@ export abstract class Graph<N, E> {
     }
 
     /**
+     * Freeze this graph (i.e prevent all changes on this graph).
+     *
+     * ```
+     * g.freeze();
+     * g.addNode('test', {}); // Does nothing and returns undefined
+     * ```
+     * 
+     * @param {boolean} frozen If true (default), the graph becomes frozen, else the graph becomes editable.
+     */
+    public freeze(frozen: boolean = true): void {
+        this._frozen = frozen;
+    }
+
+    /**
+     * Indicate whether this graph is frozen (i.e changes are prevented) or not.
+     *
+     * ```
+     * console.log(g.frozen); // false
+     * g.freeze(true);
+     * console.log(g.frozen); // true
+     * ```
+     */
+    public get frozen(): boolean {
+        return this._frozen;
+    }
+
+    /**
      * Add a new node in the graph.
      *
      * @param id   {number|string} ID to reference the new node
@@ -51,16 +79,20 @@ export abstract class Graph<N, E> {
      *         node with the given ID
      */
     public addNode(id: number|string, data: N) {
-        if (this.hasNode(id)) {
-            throw new Errors.NodeAlreadyExistsError(id);
+        if (!this._frozen) {
+            if (this.hasNode(id)) {
+                throw new Errors.NodeAlreadyExistsError(id);
+            }
+
+            let node: Node<N, any> = new Node(id, data);
+            this._nodes.set(id, node);
+
+            this._notifyHandlers('nodeCreated');
+
+            return node;
+        } else {
+            return undefined;
         }
-
-        let node: Node<N, any> = new Node(id, data);
-        this._nodes.set(id, node);
-
-        this._notifyHandlers('nodeCreated');
-
-        return node;
     }
 
     /**
@@ -90,15 +122,17 @@ export abstract class Graph<N, E> {
      * @throws {Errors.NodeNotExistsError} if the node does not exist
      */
     public removeNode(id: number|string): void {
-        let node = this.getNode(id);
-        if (!node) {
-            throw new Errors.NodeNotExistsError(id);
+        if (!this._frozen) {
+            let node = this.getNode(id);
+            if (!node) {
+                throw new Errors.NodeNotExistsError(id);
+            }
+
+            node.destroy();
+            this._nodes.delete(id);
+
+            this._notifyHandlers('nodeDeleted');
         }
-
-        node.destroy();
-        this._nodes.delete(id);
-
-        this._notifyHandlers('nodeDeleted');
     }
 
     /**
@@ -111,30 +145,33 @@ export abstract class Graph<N, E> {
      * @returns {Edge} Added edge
      */
     public addEdge(from: number|string, to: number|string, data: E): Edge<N, E> {
-        let fromNode = this.getNode(from);
+        let edge = undefined;
+        if (!this._frozen) {
+            let fromNode = this.getNode(from);
 
-        if (!fromNode) {
-            throw new Errors.NodeNotExistsError(from);
+            if (!fromNode) {
+                throw new Errors.NodeNotExistsError(from);
+            }
+
+            let toNode = this.getNode(to);
+
+            if (!toNode) {
+                throw new Errors.NodeNotExistsError(to);
+            }
+
+            if (this.noLoops && fromNode === toNode) {
+                throw new Errors.NoLoopsError(from);
+            }
+
+            if (!this._edges) {
+                this._edges = [];
+            }
+
+            edge = this.createEdge(fromNode, toNode, data);
+            this._edges.push(edge);
+
+            this._notifyHandlers('edgeCreated');
         }
-
-        let toNode = this.getNode(to);
-
-        if (!toNode) {
-            throw new Errors.NodeNotExistsError(to);
-        }
-
-        if (this.noLoops && fromNode === toNode) {
-            throw new Errors.NoLoopsError(from);
-        }
-
-        if (!this._edges) {
-            this._edges = [];
-        }
-
-        let edge = this.createEdge(fromNode, toNode, data);
-        this._edges.push(edge);
-
-        this._notifyHandlers('edgeCreated');
 
         return edge;
     }
@@ -201,18 +238,20 @@ export abstract class Graph<N, E> {
      * @throws {Errors.NodeNotExistsError} if the node does not exist
      */
     public removeEdge(from: number|string, to: number|string): void {
-        let edges = this.getEdge(from, to);
+        if (!this._frozen) {
+            let edges = this.getEdge(from, to);
 
-        for (let edge of edges) {
-            edge.destroy();
+            for (let edge of edges) {
+                edge.destroy();
 
-            let index = this._edges.indexOf(edge);
-            if (index !== -1) {
-                this._edges.splice(index, 1);
+                let index = this._edges.indexOf(edge);
+                if (index !== -1) {
+                    this._edges.splice(index, 1);
+                }
             }
-        }
 
-        this._notifyHandlers('edgeDeleted');
+            this._notifyHandlers('edgeDeleted');
+        }
     }
 
     /**
