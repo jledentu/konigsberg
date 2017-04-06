@@ -264,7 +264,7 @@ describe('DirectedGraph', function() {
 
             neighbors.should.be.Array();
             neighbors.length.should.be.eql(5);
-            let ids = neighbors.map(node => node.id);
+            let ids = neighbors.map(({node: node}) => node.id);
             ids.should.be.eql([4, 2, 3, 6, 9]);
         });
     });
@@ -283,7 +283,7 @@ describe('DirectedGraph', function() {
 
             predecessors.should.be.Array();
             predecessors.length.should.be.eql(2);
-            let ids = predecessors.map(node => node.id);
+            let ids = predecessors.map(({node: node}) => node.id);
             ids.should.be.eql([1, 2]);
         });
     });
@@ -302,7 +302,7 @@ describe('DirectedGraph', function() {
 
             successors.should.be.Array();
             successors.length.should.be.eql(5);
-            let ids = successors.map(node => node.id);
+            let ids = successors.map(({node: node}) => node.id);
             ids.should.be.eql([4, 2, 3, 6, 9]);
         });
     });

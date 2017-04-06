@@ -24,7 +24,7 @@ export default class DepthFirstSearch<N, E> {
 
                 if (visited.indexOf(current.node) === -1) {
                     visited.push(current.node);
-                    let successors = current.node.directSuccessors().map((adj) => {
+                    let successors = current.node.directSuccessors().map(({node: adj}) => {
                         return {node: adj, d: current.d + 1};
                     });
                     stack.unshift.apply(stack, successors);

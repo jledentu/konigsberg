@@ -264,7 +264,7 @@ describe('UndirectedGraph', function() {
 
             neighbors.should.be.Array();
             neighbors.length.should.be.eql(5);
-            let ids = neighbors.map(node => node.id);
+            let ids = neighbors.map(({node: node}) => node.id);
             ids.should.be.eql([4, 2, 3, 6, 9]);
         });
     });

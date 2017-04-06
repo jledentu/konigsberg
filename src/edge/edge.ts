@@ -13,7 +13,7 @@ export abstract class Edge<N, E> {
     protected _target: Node<N, E>;
 
     /**
-     * Node data
+     * Edge data
      */
     protected _data: E;
 
@@ -27,6 +27,13 @@ export abstract class Edge<N, E> {
 
         source.attachEdge(this);
         target.attachEdge(this);
+    }
+
+    /**
+     * Return the data attached to this edge.
+     */
+    public get data(): E {
+        return this._data;
     }
 
     /**

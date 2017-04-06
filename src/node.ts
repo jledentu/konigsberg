@@ -108,19 +108,21 @@ export default class Node<N, E> {
     /**
      * Return neighbors nodes.
      */
-    public neighbors(): Array<Node<N, E>> {
-        return this._edges.map((e) => e.neighbor(this));
+    public neighbors(): Array<{node: Node<N, E>, edge: Edge<N, E>}> {
+        return this._edges.map((e) => {
+            return {node: e.neighbor(this), edge: e};
+        });
     }
 
     /**
      * Return direct predecessors of this node.
      */
-    public directPredecessors(): Array<Node<N, E>> {
+    public directPredecessors(): Array<{node: Node<N, E>, edge: Edge<N, E>}> {
         let predecessors = [];
         for (let e of this._edges) {
             let predecessor = e.directPredecessor(this);
             if (predecessor) {
-                predecessors.push(predecessor);
+                predecessors.push({node: predecessor, edge: e});
             }
         }
         return predecessors;
@@ -129,12 +131,12 @@ export default class Node<N, E> {
     /**
      * Return direct successors of this node.
      */
-    public directSuccessors(): Array<Node<N, E>> {
+    public directSuccessors(): Array<{node: Node<N, E>, edge: Edge<N, E>}> {
         let successors = [];
         for (let e of this._edges) {
             let successor = e.directSuccessor(this);
             if (successor) {
-                successors.push(successor);
+                successors.push({node: successor, edge: e});
             }
         }
         return successors;
