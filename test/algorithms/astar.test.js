@@ -9,7 +9,7 @@ describe('AStar', () => {
             let g = new DirectedGraph(testGraph);
 
             let path = AStar.path(g.getNode(1), g.getNode(24), '', () => 1);
-            should(path).be.Undefined();
+            path.nodes.length.should.eql(0);
         });
 
         it('should return shortest path', () => {
@@ -17,7 +17,7 @@ describe('AStar', () => {
 
             let path = AStar.path(g.getNode(1), g.getNode(19), '', () => 1);
 
-            let nodeIds = path.map(step => step.node.id);
+            let nodeIds = path.nodes.map(node => node.id);
             nodeIds.should.eql([1, 2, 3, 5, 6, 7, 16, 19]);
         });
     });

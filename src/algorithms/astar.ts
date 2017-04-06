@@ -1,5 +1,6 @@
 import Node from '../node';
 import {Edge} from '../edge/edge';
+import Path from '../path';
 
 interface StepInfo<N, E> {
     node: Node<N, E>,
@@ -20,14 +21,13 @@ export default class AStar {
      * @param start  Start node
      * @param target Target node
      */
-    public static path<N, E>(start: Node<N, E>, target: Node<N, E>, weightProperty: string|number, heuristic: (from: N, to: N) => number): Array<{node: Node<N, E>, edge: Edge<N, E>}> {
+    public static path<N, E>(start: Node<N, E>, target: Node<N, E>, weightProperty: string|number, heuristic: (from: N, to: N) => number): Path<N, E> {
         if (start === undefined || target === undefined) {
             return;
         }
 
         let openList: Array<StepInfo<N, E>> = [{node: start, f: 0, g: 0}];
         let closedList: Array<StepInfo<N, E>> = [];
-        let path;
 
         while (openList.length > 0) {
             // Find the best node
@@ -44,16 +44,18 @@ export default class AStar {
 
             if (currentNode.node === target) {
                 // Rebuild the path
-                path = [];
+                let nodes = [];
+                let edges = [];
                 let parent: StepInfo<N, E> = currentNode;
                 while (parent) {
-                    path.unshift({
-                        node: parent.node,
-                        edge: parent.edge
-                    });
+                    nodes.unshift(parent.node);
+
+                    if (parent.edge) {
+                        edges.unshift(parent.edge);
+                    }
                     parent = parent.parent;
                 }
-                return path;
+                return new Path(nodes, edges);
             }
 
             for (let successor of currentNode.node.directSuccessors()) {
@@ -93,6 +95,6 @@ export default class AStar {
             }
         }
 
-        return path;
+        return new Path();
     }
 };
