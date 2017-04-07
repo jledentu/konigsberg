@@ -25,7 +25,7 @@ export default class DirectedGraph<N, E> extends Graph<N, E>{
      * @param id {number | string} ID of the node
      * @return {Array} Array containing the direct predecessors IDs
      */
-    public directPredecessors(id: number | string): Array<Node<N, E>> {
+    public directPredecessors(id: number | string): Array<{node: Node<N, E>, edge: DirectedEdge<N, E>}> {
         let node = this.getNode(id);
 
         if (node) {
@@ -41,7 +41,7 @@ export default class DirectedGraph<N, E> extends Graph<N, E>{
      * @param id {number | string} ID of the node
      * @return {Array} Array containing the direct successors IDs
      */
-    public directSuccessors(id: number | string): Array<Node<N, E>> {
+    public directSuccessors(id: number | string): Array<{node: Node<N, E>, edge: DirectedEdge<N, E>}> {
         let node = this.getNode(id);
 
         if (node) {

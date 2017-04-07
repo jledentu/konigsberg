@@ -95,6 +95,6 @@ export default class AStar {
             }
         }
 
-        return new Path();
+        return new Path<N, E>();
     }
 };

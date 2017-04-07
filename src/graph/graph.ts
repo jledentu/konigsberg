@@ -260,7 +260,7 @@ export abstract class Graph<N, E> {
      * @param id {number | string} ID of the node
      * @return {Array} Array containing the neighbors nodes IDs
      */
-    public neighbors(id: number | string): Array<Node<N, E>> {
+    public neighbors(id: number | string): Array<{node: Node<N, E>, edge: Edge<N, E>}> {
         let node = this.getNode(id);
 
         if (node) {
