@@ -6,7 +6,8 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'konigsberg.js',
         library: 'konigsberg',
-        libraryTarget: 'umd'
+        libraryTarget: 'umd',
+        devtoolModuleFilenameTemplate: `[resource-path]` 
     },
     module: {
         rules: [
@@ -44,5 +45,6 @@ module.exports = {
             path.resolve(__dirname, 'src')
         ],
         extensions: ['.js', '.json', '.ts']
-    }
+    },
+    devtool: 'source-map'
 };
