@@ -60,6 +60,8 @@ export default class AStar {
                 return new Path(nodes, edges);
             }
 
+            console.log(currentNode.node.id);
+
             for (let successor of currentNode.node.directSuccessors()) {
                 let cost = currentNode.g + (typeof distance === 'function' ? distance(successor.edge.data) : 1);
 
@@ -77,7 +79,7 @@ export default class AStar {
                 let adjIndexInClosed = -1;
                 for (let i = 0, length = closedList.length; i < length; i++) {
                     if (closedList[i].node === successor.node) {
-                        adjIndexInOpen = i;
+                        adjIndexInClosed = i;
                         break;
                     }
                 }
