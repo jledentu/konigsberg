@@ -18,10 +18,12 @@ export default class AStar {
     /**
      * Return the shortest path found by the algorithm from a node to another.
      *
-     * @param start  Start node
-     * @param target Target node
+     * @param start     Start node
+     * @param target    Target node
+     * @param distance  Distance function
+     * @param heuristic Heuristic function
      */
-    public static path<N, E>(start: Node<N, E>, target: Node<N, E>, weightProperty: string|number, heuristic: (from: N, to: N) => number): Path<N, E> {
+    public static path<N, E>(start: Node<N, E>, target: Node<N, E>, distance: ((edgeData: E) => number), heuristic: (from: N, to: N) => number): Path<N, E> {
         if (start === undefined || target === undefined) {
             return;
         }
@@ -59,7 +61,7 @@ export default class AStar {
             }
 
             for (let successor of currentNode.node.directSuccessors()) {
-                let cost = currentNode.g + (weightProperty && successor.edge.data && successor.edge.data.hasOwnProperty(weightProperty) ? successor.edge.data[weightProperty] : 1);
+                let cost = currentNode.g + (typeof distance === 'function' ? distance(successor.edge.data) : 1);
 
                 let adjIndexInOpen = -1;
                 for (let i = 0, length = openList.length; i < length; i++) {
