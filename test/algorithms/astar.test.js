@@ -55,7 +55,7 @@ describe('AStar', () => {
             let path = AStar.path(g.getNode(1), g.getNode(19), edgeData => edgeData.d || 0, () => 1);
 
             let nodeIds = path.nodes.map(node => node.id);
-            nodeIds.should.eql([1, 2, 3, 5, 9, 10, 11, 8, 7, 16, 19]);
+            nodeIds.should.eql([1, 2, 3, 5, 9, 10, 11, 8, 6, 7, 16, 19]);
         });
     });
 });
