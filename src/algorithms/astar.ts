@@ -28,6 +28,10 @@ export default class AStar {
             return;
         }
 
+        if (!heuristic) {
+            heuristic = _ => 0;
+        }
+
         let openList: Array<StepInfo<N, E>> = [{node: start, f: 0, g: 0}];
         let closedList: Array<StepInfo<N, E>> = [];
 
@@ -41,7 +45,6 @@ export default class AStar {
             }
 
             let currentNode: StepInfo<N, E> = openList[min];
-            closedList.push(currentNode);
             openList.splice(min, 1);
 
             if (currentNode.node === target) {
@@ -60,9 +63,18 @@ export default class AStar {
                 return new Path(nodes, edges);
             }
 
+            closedList.push(currentNode);
+
             console.log(currentNode.node.id);
 
             for (let successor of currentNode.node.directSuccessors()) {
+
+                for (let i = 0, length = closedList.length; i < length; i++) {
+                    if (closedList[i].node === successor.node) {
+                        continue;
+                    }
+                }
+
                 let cost = currentNode.g + (typeof distance === 'function' ? distance(successor.edge.data) : 1);
 
                 let adjIndexInOpen = -1;
@@ -72,22 +84,8 @@ export default class AStar {
                         break;
                     }
                 }
-                if (adjIndexInOpen >= 0 && cost < openList[adjIndexInOpen].g) {
-                    openList.splice(adjIndexInOpen, 1);
-                }
 
-                let adjIndexInClosed = -1;
-                for (let i = 0, length = closedList.length; i < length; i++) {
-                    if (closedList[i].node === successor.node) {
-                        adjIndexInClosed = i;
-                        break;
-                    }
-                }
-                if (adjIndexInClosed >= 0 && cost < closedList[adjIndexInClosed].g) {
-                    closedList.splice(adjIndexInClosed, 1);
-                }
-
-                if (adjIndexInOpen < 0 && adjIndexInClosed < 0) {
+                if (adjIndexInOpen < 0) {
                     openList.push({
                         node: successor.node,
                         edge: successor.edge,
@@ -95,6 +93,8 @@ export default class AStar {
                         f: cost + heuristic(successor.node.data, target.data),
                         parent: currentNode
                     });
+                } else if (cost < openList[adjIndexInOpen].g) {
+                    openList[adjIndexInOpen].g = cost;
                 }
             }
         }
