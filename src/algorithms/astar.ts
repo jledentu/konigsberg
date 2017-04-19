@@ -20,20 +20,24 @@ export default class AStar {
      *
      * @param start     Start node
      * @param target    Target node
-     * @param distance  Distance function
+     * @param weight    Weight function
      * @param heuristic Heuristic function
      */
-    public static path<N, E>(start: Node<N, E>, target: Node<N, E>, distance: ((edgeData: E) => number), heuristic: (from: N, to: N) => number): Path<N, E> {
+    public static path<N, E>(start: Node<N, E>, target: Node<N, E>, weight: ((edgeData: E) => number), heuristic: (from: N, to: N) => number): Path<N, E> {
         if (start === undefined || target === undefined) {
-            return;
+            return undefined;
         }
 
-        if (!heuristic) {
+        if (!weight || typeof weight !== 'function') {
+            weight = _ => 1;
+        }
+
+        if (!heuristic || typeof heuristic !== 'function') {
             heuristic = _ => 0;
         }
 
         let openList: Array<StepInfo<N, E>> = [{node: start, f: 0, g: 0}];
-        let closedList: Array<StepInfo<N, E>> = [];
+        let closedList: Array<string|number> = [];
 
         while (openList.length > 0) {
             // Find the best node
@@ -48,7 +52,7 @@ export default class AStar {
             openList.splice(min, 1);
 
             if (currentNode.node === target) {
-                // Rebuild the path
+                // Found the goal: rebuild the path
                 let nodes = [];
                 let edges = [];
                 let parent: StepInfo<N, E> = currentNode;
@@ -63,22 +67,16 @@ export default class AStar {
                 return new Path(nodes, edges);
             }
 
-            closedList.push(currentNode);
+            closedList.push(currentNode.node.id);
 
             for (let successor of currentNode.node.directSuccessors()) {
 
-                let adjIndexInClosed = -1;
-                for (let i = 0, length = closedList.length; i < length; i++) {
-                    if (closedList[i].node === successor.node) {
-                        adjIndexInClosed = i;
-                    }
-                }
-
+                let adjIndexInClosed = closedList.indexOf(successor.node.id);
                 if (adjIndexInClosed !== -1) {
                     continue;
                 }
 
-                let cost = currentNode.g + (typeof distance === 'function' ? distance(successor.edge.data) : 1);
+                let cost = currentNode.g + weight(successor.edge.data);
 
                 let adjIndexInOpen = -1;
                 for (let i = 0, length = openList.length; i < length; i++) {
